@@ -1,24 +1,21 @@
-# Official Node.js image එක පාවිච්චි කිරීම
+# Use official Node.js image
 FROM node:20-bookworm
 
-# සිස්ටම් එකට අවශ්‍ය updates සහ dependencies (අවශ්‍ය වුණොත්)
-RUN apt-get update && apt-get install -y \
-    git \
-    ffmpeg \
-    && rm -rf /var/lib/apt/lists/*
-
-# Working directory එක සකස් කිරීම
+# Set the working directory inside the container
 WORKDIR /app
 
-# Dependencies install කිරීම (Caching පාවිච්චි කර වේගවත් කිරීමට)
+# Copy package.json and package-lock.json to the container
 COPY package*.json ./
-RUN npm install --production
 
-# ඉතිරි files සියල්ල copy කිරීම
+# Install the application dependencies
+RUN npm install
+
+# Copy the rest of the application files into the container
 COPY . .
 
-# Railway එකෙන් දෙන PORT එකට expose කිරීම
+# Expose the port your app will be running on
 EXPOSE 8000
 
-# App එක start කරන විධානය
+# Command to run the app
 CMD ["npm", "start"]
+
